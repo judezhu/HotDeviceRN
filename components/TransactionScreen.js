@@ -1,8 +1,7 @@
-// import React from 'react';
+import React from 'react';
 import { StyleSheet, View, Text, TextInput, Button } from 'react-native';
-// import QRCode from 'react-native-qrcode';
+import QRCode from 'react-native-qrcode';
  /* @flow */
- import React, { PureComponent } from 'react';
  import 'babel-preset-react-native-web3/globals';
  import Web3 from 'web3';
  import truffleConfig from '../truffle';
@@ -21,11 +20,7 @@ class TransactionScreen extends React.Component {
       };
     
     componentDidMount() {
-         
         const TESTRPC_ADDRESS = `${network.protocol}://${network.host}/${network.key}`;
-        var crypto = require('crypto')
-        // var abc = crypto.createHash('sha1').update('abc').digest('hex')
-        type Props = *;
         const web3Provider = new Web3.providers.HttpProvider(TESTRPC_ADDRESS);
         this.web3 = new Web3(web3Provider);
 
@@ -70,11 +65,11 @@ class TransactionScreen extends React.Component {
                     onPress={this.generateQrCode}
                     color="#841584"
                 ></Button>
-                {/* <QRCode
+                <QRCode
                     value={this.state.qrCodeValue}
                     size={200}
                     bgColor='purple'
-                    fgColor='white' /> */}
+                    fgColor='white' />
             </View>
         );
     }
