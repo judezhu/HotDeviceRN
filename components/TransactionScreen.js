@@ -12,6 +12,7 @@ class TransactionScreen extends React.Component {
         toAddress: '0x4858e6E0991C3eb852D0e3c10E9Ce1ed4aB88BFc',
         fromAddress: '',
         value: '0x00',
+        valueText: '0x00',
         gasPrice: '0x09184e72a000',
         gasLimit: '0x2710',
         nounce: '0x00',
@@ -23,10 +24,11 @@ class TransactionScreen extends React.Component {
         title: 'Create Transaction',
       };
     
-    convertEthToWei = n => new web3.BigNumber(web3.toWei(n, 'ether'))
+    convertEthToWei = (n, web3) => new web3.BigNumber(web3.toWei(n, 'ether'))
 
-    getHexValue = text => {
-        this.setState({value: '0x' + this.convertEthToWei(parseFloat(text).toString(16))});
+    getHexValue = (text, web3) => {
+        this.setState({value: '0x' + this.convertEthToWei(parseFloat(text), web3).toString(16)});
+        this.setState({valueText: text});
     }
     
     componentDidMount() {
@@ -45,11 +47,11 @@ class TransactionScreen extends React.Component {
     generateQrCode = () => {
         console.log(this.state)
         const qrCodeString =
-            `{"toAddress":"${this.state.walletName}",
+            `{"toAddress":"${this.state.toAddress}",
             "value":${this.state.value},
             "gasPrice":${this.state.gasPrice},
             "gasLimit":${this.state.gasLimit},
-            "gasLimit":${this.state.gasLimit},
+            "devices":${this.state.devices},
             "nounce":${this.state.nounce}}`
         this.setState({ qrCodeValue: qrCodeString })
     }
@@ -66,14 +68,14 @@ class TransactionScreen extends React.Component {
                 />
                 <TextInput
                     style={styles.input}
-                    onChangeText={(text) => this.getHexValue(text)}
-                    value={this.state.value}
+                    onChangeText={(text) => this.getHexValue(text,this.web3)}
+                    value={this.state.valueText}
                     placeholder="Value"
                 />
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.setState({ devices: text })}
-                    value={this.state.value}
+                    value={this.state.devices}
                     placeholder="Devices"
                 />
                 <Button 
