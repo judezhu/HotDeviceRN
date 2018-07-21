@@ -29,6 +29,13 @@ export default class HomeScreen extends React.Component {
           title="Create Transaction"
           color="#841584"
           accessibilityLabel="Learn more about this purple button">Create Transaction</Button>
+        <Button   
+          onPress={() =>
+            navigate('Broadcast')
+          }
+          title="Broadcast Transaction"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button">Broadcast Transaction</Button>
       </View>
     );
   }
