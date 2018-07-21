@@ -15,6 +15,7 @@ class TransactionScreen extends React.Component {
         gasPrice: '0x09184e72a000',
         gasLimit: '0x2710',
         nounce: '0x00',
+        devices: '',
         qrCodeValue: '',
     }
 
@@ -25,7 +26,7 @@ class TransactionScreen extends React.Component {
     convertEthToWei = n => new web3.BigNumber(web3.toWei(n, 'ether'))
 
     getHexValue = text => {
-        this.setState({value: this.convertEthToWei(parseFloat(text).toString(16))});
+        this.setState({value: '0x' + this.convertEthToWei(parseFloat(text).toString(16))});
     }
     
     componentDidMount() {
@@ -34,11 +35,9 @@ class TransactionScreen extends React.Component {
         this.web3 = new Web3(web3Provider);
 
         this.web3.eth.getTransactionCount("0x4858e6E0991C3eb852D0e3c10E9Ce1ed4aB88BFc",(err, number) => {
-            alert(number);
-            const hexString = number.toString(16);
-            this.setState({ nounce: hexString })
+            const hexString = '0x' + number.toString(16);
             alert(hexString);
-            console.log(hexString);
+            this.setState({ nounce: hexString })
         });
 
     }
@@ -70,6 +69,12 @@ class TransactionScreen extends React.Component {
                     onChangeText={(text) => this.getHexValue(text)}
                     value={this.state.value}
                     placeholder="Value"
+                />
+                <TextInput
+                    style={styles.input}
+                    onChangeText={(text) => this.setState({ devices: text })}
+                    value={this.state.value}
+                    placeholder="Devices"
                 />
                 <Button 
                     title="Generate QR"
