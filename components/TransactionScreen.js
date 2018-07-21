@@ -100,25 +100,3 @@ const styles = StyleSheet.create({
 });
 
 export default TransactionScreen;
-
-
-
- 
- // const TESTRPC_ADDRESS = `${network.protocol}://${network.host}:${network.port}`;
-
-//  export default class App extends PureComponent<Props> {
-//      constructor(props: Props) {
-//          super(props);
-//          // Initialize web3 and set the provider to the testRPC.
-//          // set the provider you want from Web3.providers
-         
-//      }
-//      web3: *;
-//      render() {
-//          return (
-//              <Container>
-//                  <Main web3={this.web3} />
-//              </Container>
-//          );
-//      }
-//  }
