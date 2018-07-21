@@ -9,15 +9,24 @@ import QRCode from 'react-native-qrcode';
 
 class TransactionScreen extends React.Component {
     state = {
-        toAddress: '',
+        toAddress: '0x4858e6E0991C3eb852D0e3c10E9Ce1ed4aB88BFc',
         fromAddress: '',
-        value: '',
+        value: '0x00',
+        gasPrice: '0x09184e72a000',
+        gasLimit: '0x2710',
+        nounce: '0x00',
         qrCodeValue: '',
     }
 
     static navigationOptions = {
         title: 'Create Transaction',
       };
+    
+    convertEthToWei = n => new web3.BigNumber(web3.toWei(n, 'ether'))
+
+    getHexValue = text => {
+        this.setState({value: this.convertEthToWei(parseFloat(text).toString(16))});
+    }
     
     componentDidMount() {
         const TESTRPC_ADDRESS = `${network.protocol}://${network.host}/${network.key}`;
@@ -26,6 +35,10 @@ class TransactionScreen extends React.Component {
 
         this.web3.eth.getTransactionCount("0x4858e6E0991C3eb852D0e3c10E9Ce1ed4aB88BFc",(err, number) => {
             alert(number);
+            const hexString = number.toString(16);
+            this.setState({ nounce: hexString })
+            alert(hexString);
+            console.log(hexString);
         });
 
     }
@@ -33,7 +46,12 @@ class TransactionScreen extends React.Component {
     generateQrCode = () => {
         console.log(this.state)
         const qrCodeString =
-            `{"toAddress":"${this.state.walletName}","fromAddress":"${this.state.entropy}","value":${this.state.numShares}}`
+            `{"toAddress":"${this.state.walletName}",
+            "value":${this.state.value},
+            "gasPrice":${this.state.gasPrice},
+            "gasLimit":${this.state.gasLimit},
+            "gasLimit":${this.state.gasLimit},
+            "nounce":${this.state.nounce}}`
         this.setState({ qrCodeValue: qrCodeString })
     }
 
@@ -44,18 +62,12 @@ class TransactionScreen extends React.Component {
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.setState({ toAddress: text })}
-                    value={this.state.walletName}
+                    value={this.state.toAddress}
                     placeholder="To"
                 />
                 <TextInput
                     style={styles.input}
-                    onChangeText={(text) => this.setState({ fromAddress: text })}
-                    value={this.state.entropy}
-                    placeholder="From"
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text) => this.setState({ value: text })}
+                    onChangeText={(text) => this.getHexValue(text)}
                     value={this.state.value}
                     placeholder="Value"
                 />
