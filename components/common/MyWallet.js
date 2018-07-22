@@ -1,8 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import QRCode from 'react-native-qrcode';
+import Web3 from 'web3';
+import truffleConfig from '../../truffle';
+const network = truffleConfig.networks.ropsten;
 
-class WalletConfigScreen extends React.Component {
+class MyWallet extends React.Component {
     state = {
         walletName: '',
         entropy: '',
@@ -11,10 +14,6 @@ class WalletConfigScreen extends React.Component {
         qrCodeValue: '',
     }
 
-    static navigationOptions = {
-        title: 'Wallet Config',
-      };
-
     generateQrCode = () => {
         console.log(this.state)
         const qrCodeString =
@@ -22,10 +21,25 @@ class WalletConfigScreen extends React.Component {
         this.setState({ qrCodeValue: qrCodeString })
     }
 
+    componentDidMount() {
+        const { wallet } = this.props;
+        const TESTRPC_ADDRESS = `${network.protocol}://${network.host}/${network.key}`;
+        const web3Provider = new Web3.providers.HttpProvider(TESTRPC_ADDRESS);
+        this.web3 = new Web3(web3Provider);
+
+        this.web3.eth.getTransactionCount("0x4858e6E0991C3eb852D0e3c10E9Ce1ed4aB88BFc",(err, number) => {
+            const hexString = '0x' + number.toString(16);
+            alert(hexString);
+            this.setState({ nounce: hexString })
+        });
+    }
+
     render() {
+        const { user, dashboard, translations } = this.props;
         return (
-            <View style={styles.container}>
-                <Text>Please enter the configuration of your wallet: </Text>
+            <View>
+                <Text>Your Ethereum Address is: </Text>
+                <Text> {this.state.address} </Text>
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.setState({ walletName: text })}
@@ -50,12 +64,6 @@ class WalletConfigScreen extends React.Component {
                     value={this.state.threshold}
                     placeholder="Threshhold"
                 />
-                <Button 
-                    title="Generate QR"
-                    color="primary"
-                    onPress={this.generateQrCode}
-                    color="#841584"
-                ></Button>
                 <QRCode
                     value={this.state.qrCodeValue}
                     size={200}
@@ -85,4 +93,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default WalletConfigScreen;
+export default MyWallet;

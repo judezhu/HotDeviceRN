@@ -10,13 +10,12 @@ import QRCode from 'react-native-qrcode';
 class TransactionScreen extends React.Component {
     state = {
         toAddress: '0x4858e6E0991C3eb852D0e3c10E9Ce1ed4aB88BFc',
-        fromAddress: '',
         value: '0x00',
-        valueText: '0x00',
+        valueText: '0',
         gasPrice: '0x09184e72a000',
         gasLimit: '0x2710',
         nounce: '0x00',
-        devices: '',
+        devices: '0 1 2',
         qrCodeValue: '',
     }
 
@@ -47,12 +46,12 @@ class TransactionScreen extends React.Component {
     generateQrCode = () => {
         console.log(this.state)
         const qrCodeString =
-            `{"toAddress":"${this.state.toAddress}",
-            "value":${this.state.value},
-            "gasPrice":${this.state.gasPrice},
-            "gasLimit":${this.state.gasLimit},
-            "devices":${this.state.devices},
-            "nounce":${this.state.nounce}}`
+            `{"to":"${this.state.toAddress}",
+            "value":"${this.state.value}",
+            "gasPrice":"${this.state.gasPrice}",
+            "gasLimit":"${this.state.gasLimit}",
+            "devices":"${this.state.devices}",
+            "nounce":"${this.state.nounce}"}`
         this.setState({ qrCodeValue: qrCodeString })
     }
 

@@ -2,15 +2,17 @@ import {
 	createStackNavigator,
   } from 'react-navigation';
   import HomeScreen from './components/HomeScreen'
-  import WalletConfigScreen from './components/WalletConfigScreen'
+  import WalletScreen from './components/WalletScreen'
   import TransactionScreen from './components/TransactionScreen'
   import BroadcastScreen from './components/BroadcastScreen'
+  import BarcodeScreen from './components/BarcodeScreen'
   
   const App = createStackNavigator({
 	Home: { screen: HomeScreen },
-	WalletConfig: { screen: WalletConfigScreen },
+	Wallet: { screen: WalletScreen },
 	Transaction: { screen: TransactionScreen },
-	Broadcast: { screen: BroadcastScreen },
+  Broadcast: { screen: BroadcastScreen },
+  Barcode: { screen: BarcodeScreen}
   });
   
 export default App;

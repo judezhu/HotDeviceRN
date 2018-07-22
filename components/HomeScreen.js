@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, Button, View } from 'react-native';
+import { StyleSheet, Text, Button, View , Image} from 'react-native';
+import { logo } from '../assets/eth.png'
 import {
   createStackNavigator,
 } from 'react-navigation';
@@ -15,13 +16,15 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Text style={styles.titleText}>Enterprise Cold Wallet</Text>
+        {/* <img  src={require('../assets/logo.png')} width="100" height="50" /> */}
+        <Image source={require('../assets/eth.png')} style={styles.stretch} />
         <Button   
           onPress={() =>
-            navigate('WalletConfig')
+            navigate('Wallet')
           }
-          title="Config Wallet"
+          title="My Account"
           color="#841584"
-          accessibilityLabel="Learn more about this purple button">Config Wallet</Button>
+          accessibilityLabel="Learn more about this purple button">My Wallet</Button>
         <Button   
           onPress={() =>
             navigate('Transaction')
@@ -52,5 +55,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 40,
+  },
+  stretch: {
+    width: 100,
+    height: 100
   }
 });
