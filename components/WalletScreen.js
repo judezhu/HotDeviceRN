@@ -15,26 +15,21 @@ class WalletScreen extends React.Component {
     state = {
         walletExist: false,
         hasCameraPermission: null,
-        wallet : null
+        wallet : { address: '0x88' }
     }
 
     async componentWillMount() {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        const wallet = null;
+        let wallet = null;
         try {
-            result = await FileSystem.readAsStringAsync(FileSystem.documentDirectory+'/test') 
+            wallet = await FileSystem.readAsStringAsync(FileSystem.documentDirectory+'/test') 
           } catch (err) {
             console.log(`wallet file not exists.`)
           }
-        // if (wallet) {
-        //     await FileSystem.deleteAsync(FileSystem.documentDirectory+'/test') 
-        // }
         if (wallet) {
             this.setState({walletExist: true});
-            this.setState({wallet: wallet});
+            this.setState({wallet: JSON.parse(wallet)});
         }
-        // console.log(wallet);
-        alert(wallet);
         this.setState({ hasCameraPermission: status === 'granted' });
     }
 
@@ -42,8 +37,17 @@ class WalletScreen extends React.Component {
         const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
-                { this.state.walletExist ?  <MyWallet Wallet={this.state.wallet} /> : <WalletConfig />}
+                { this.state.walletExist ?  <MyWallet /> : <WalletConfig />}
+                { !this.state.walletExist && <Button
+                    title="Import Account"
+                    color="primary"
+                    onPress={() =>
+                        navigate('Barcode')
+                    }
+                    color="#841584"
+                ></Button>}
             </View>
+            
         );
     }
 }

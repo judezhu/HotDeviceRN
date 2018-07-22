@@ -4,14 +4,13 @@ import QRCode from 'react-native-qrcode';
 import Web3 from 'web3';
 import truffleConfig from '../../truffle';
 const network = truffleConfig.networks.ropsten;
+import { FileSystem } from 'expo';
 
 class MyWallet extends React.Component {
     state = {
-        walletName: '',
-        entropy: '',
-        numShares: '',
-        threshold: '',
-        qrCodeValue: '',
+        isLoading: true,
+        wallet: { address: '' },
+        balance: 0,
     }
 
     generateQrCode = () => {
@@ -22,55 +21,43 @@ class MyWallet extends React.Component {
     }
 
     componentDidMount() {
-        const { wallet } = this.props;
-        const TESTRPC_ADDRESS = `${network.protocol}://${network.host}/${network.key}`;
-        const web3Provider = new Web3.providers.HttpProvider(TESTRPC_ADDRESS);
-        this.web3 = new Web3(web3Provider);
-
-        this.web3.eth.getTransactionCount("0x4858e6E0991C3eb852D0e3c10E9Ce1ed4aB88BFc",(err, number) => {
-            const hexString = '0x' + number.toString(16);
-            alert(hexString);
-            this.setState({ nounce: hexString })
-        });
+        var that = this;
+        FileSystem.readAsStringAsync(FileSystem.documentDirectory + '/test').then(function(walletString){
+            let wallet = JSON.parse(walletString);
+            // alert(wallet["address"]);
+            const TESTRPC_ADDRESS = `${network.protocol}://${network.host}/${network.key}`;
+            const web3Provider = new Web3.providers.HttpProvider(TESTRPC_ADDRESS);
+            this.web3 = new Web3(web3Provider);
+            this.web3.eth.getBalance(wallet["address"],(err, number) => {
+                that.setState({ wallet: wallet })
+                that.setState({isLoading: false});
+                that.setState({balance: number.toString(10)});
+                // alert(number);
+            });
+            // alert(wallet["address"]);
+   
+      
+        }).catch(err => {alert(err)});
+ 
     }
 
     render() {
-        const { user, dashboard, translations } = this.props;
         return (
             <View>
-                <Text>Your Ethereum Address is: </Text>
-                <Text> {this.state.address} </Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text) => this.setState({ walletName: text })}
-                    value={this.state.walletName}
-                    placeholder="Wallet Name"
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text) => this.setState({ entropy: text })}
-                    value={this.state.entropy}
-                    placeholder="Entropy"
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text) => this.setState({ numShares: text })}
-                    value={this.state.numShares}
-                    placeholder="Num of Shares"
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={(text) => this.setState({ threshold: text })}
-                    value={this.state.threshold}
-                    placeholder="Threshhold"
-                />
-                <QRCode
-                    value={this.state.qrCodeValue}
-                    size={200}
-                    bgColor='purple'
-                    fgColor='white' />
-            </View>
-        );
+                {
+                    this.state.isLoading ? (<Text> still loding </Text>) :
+                        (<View><Text>Your Ethereum Address is </Text>
+                            <Text> {this.state.wallet.address} </Text>
+                            <QRCode
+                                value={this.state.wallet.address}
+                                size={200}
+                                bgColor='purple'
+                                fgColor='white' />
+                            <Text>Your Balance is {this.state.balance} eth </Text>
+                        </View>
+                        )
+                }
+            </View>);
     }
 }
 

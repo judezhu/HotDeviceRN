@@ -20,6 +20,7 @@ class WalletConfig extends React.Component {
 
     render() {
         return (
+
             <View>
                 <Text>Please enter the configuration of your wallet: </Text>
                 <TextInput
@@ -57,14 +58,7 @@ class WalletConfig extends React.Component {
                     size={200}
                     bgColor='purple'
                     fgColor='white' />
-                 <Button
-                    title="Import Account"
-                    color="primary"
-                    onPress={() =>
-                        navigate('Barcode')
-                    }
-                    color="#841584"
-                ></Button>
+ 
             </View>
         );
     }
