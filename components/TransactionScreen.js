@@ -10,12 +10,12 @@ import QRCode from 'react-native-qrcode';
 class TransactionScreen extends React.Component {
     state = {
         toAddress: '0x4858e6E0991C3eb852D0e3c10E9Ce1ed4aB88BFc',
-        value: '0x00',
+        value: '0x0500',
         valueText: '0',
-        gasPrice: '0x09184e72a000',
-        gasLimit: '0x2710',
+        gasPrice: '0x04185e72a000',
+        gasLimit: '0x30010',
         nounce: '0x00',
-        devices: '0 1 2',
+        devices: '1 2 3',
         qrCodeValue: '',
     }
 
@@ -35,7 +35,7 @@ class TransactionScreen extends React.Component {
         const web3Provider = new Web3.providers.HttpProvider(TESTRPC_ADDRESS);
         this.web3 = new Web3(web3Provider);
 
-        this.web3.eth.getTransactionCount("0x4858e6E0991C3eb852D0e3c10E9Ce1ed4aB88BFc",(err, number) => {
+        this.web3.eth.getTransactionCount("0x3e61Ae965b3be2f521e0E50875f1Dc58914367FB",(err, number) => {
             const hexString = '0x' + number.toString(16);
             alert(hexString);
             this.setState({ nounce: hexString })
@@ -65,12 +65,12 @@ class TransactionScreen extends React.Component {
                     value={this.state.toAddress}
                     placeholder="To"
                 />
-                <TextInput
+                {/* <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.getHexValue(text,this.web3)}
                     value={this.state.valueText}
                     placeholder="Value"
-                />
+                /> */}
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.setState({ devices: text })}

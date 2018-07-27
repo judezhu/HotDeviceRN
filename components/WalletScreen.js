@@ -23,6 +23,7 @@ class WalletScreen extends React.Component {
         let wallet = null;
         try {
             wallet = await FileSystem.readAsStringAsync(FileSystem.documentDirectory+'/test') 
+            // FileSystem.deleteAsync(FileSystem.documentDirectory+'/test')
           } catch (err) {
             console.log(`wallet file not exists.`)
           }

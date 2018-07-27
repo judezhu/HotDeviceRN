@@ -1,6 +1,7 @@
 import {
 	createStackNavigator,
   } from 'react-navigation';
+  // import Main from './src/Main'
   import HomeScreen from './components/HomeScreen'
   import WalletScreen from './components/WalletScreen'
   import TransactionScreen from './components/TransactionScreen'
