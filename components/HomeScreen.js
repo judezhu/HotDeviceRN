@@ -15,8 +15,7 @@ export default class HomeScreen extends React.Component {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-        <Text style={styles.titleText}>Enterprise Cold Wallet</Text>
-        {/* <img  src={require('../assets/logo.png')} width="100" height="50" /> */}
+        <Text style={styles.titleText}>Enterprise Digital Asset</Text>
         <Image source={require('../assets/eth.png')} style={styles.stretch} />
         <Button   
           onPress={() =>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import QRCode from 'react-native-qrcode';
 import Web3 from 'web3';
 import truffleConfig from '../../truffle';
@@ -22,23 +22,18 @@ class MyWallet extends React.Component {
 
     componentDidMount() {
         var that = this;
-        FileSystem.readAsStringAsync(FileSystem.documentDirectory + '/test').then(function(walletString){
+        FileSystem.readAsStringAsync(FileSystem.documentDirectory + '/wallet').then(function (walletString) {
             let wallet = JSON.parse(walletString);
-            // alert(wallet["address"]);
             const TESTRPC_ADDRESS = `${network.protocol}://${network.host}/${network.key}`;
             const web3Provider = new Web3.providers.HttpProvider(TESTRPC_ADDRESS);
             this.web3 = new Web3(web3Provider);
-            this.web3.eth.getBalance(wallet["address"],(err, number) => {
+            this.web3.eth.getBalance(wallet["address"], (err, number) => {
                 that.setState({ wallet: wallet })
-                that.setState({isLoading: false});
-                that.setState({balance: number.toString(10)});
-                // alert(number);
+                that.setState({ isLoading: false });
+                let ethValue = this.web3.fromWei(number, 'ether');
+                that.setState({ balance: ethValue.toString(10) });
             });
-            // alert(wallet["address"]);
-   
-      
-        }).catch(err => {alert(err)});
- 
+        }).catch(err => { alert(err) });
     }
 
     render() {

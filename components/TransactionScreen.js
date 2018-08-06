@@ -1,14 +1,16 @@
 import React from 'react';
 import { StyleSheet, View, Text, TextInput, Button } from 'react-native';
 import QRCode from 'react-native-qrcode';
- /* @flow */
- import 'babel-preset-react-native-web3/globals';
- import Web3 from 'web3';
- import truffleConfig from '../truffle';
- const network = truffleConfig.networks.ropsten;
+/* @flow */
+import 'babel-preset-react-native-web3/globals';
+import Web3 from 'web3';
+import truffleConfig from '../truffle';
+const network = truffleConfig.networks.ropsten;
+import { FileSystem } from 'expo';
 
 class TransactionScreen extends React.Component {
     state = {
+        fromAddress: '0x0',
         toAddress: '0x4858e6E0991C3eb852D0e3c10E9Ce1ed4aB88BFc',
         value: '0x0500',
         valueText: '0',
@@ -21,26 +23,33 @@ class TransactionScreen extends React.Component {
 
     static navigationOptions = {
         title: 'Create Transaction',
-      };
-    
+    };
+
     convertEthToWei = (n, web3) => new web3.BigNumber(web3.toWei(n, 'ether'))
 
     getHexValue = (text, web3) => {
-        this.setState({value: '0x' + this.convertEthToWei(parseFloat(text), web3).toString(16)});
-        this.setState({valueText: text});
+        this.setState({ value: '0x' + this.convertEthToWei(parseFloat(text), web3).toString(16) });
+        this.setState({ valueText: text });
     }
-    
+
     componentDidMount() {
         const TESTRPC_ADDRESS = `${network.protocol}://${network.host}/${network.key}`;
         const web3Provider = new Web3.providers.HttpProvider(TESTRPC_ADDRESS);
         this.web3 = new Web3(web3Provider);
+        const vm = this;
+        FileSystem.readAsStringAsync(FileSystem.documentDirectory + '/wallet').then(function (walletString) {
+            let wallet = JSON.parse(walletString);
+            const TESTRPC_ADDRESS = `${network.protocol}://${network.host}/${network.key}`;
+            const web3Provider = new Web3.providers.HttpProvider(TESTRPC_ADDRESS);
+            this.web3 = new Web3(web3Provider);
 
-        this.web3.eth.getTransactionCount("0x3e61Ae965b3be2f521e0E50875f1Dc58914367FB",(err, number) => {
-            const hexString = '0x' + number.toString(16);
-            alert(hexString);
-            this.setState({ nounce: hexString })
-        });
-
+            vm.setState({ fromAddress: wallet["address"] });
+            this.web3.eth.getTransactionCount(wallet["address"], (err, number) => {
+                const hexString = '0x' + number.toString(16);
+                alert(hexString);
+                vm.setState({ nounce: hexString })
+            });
+        }).catch(err => { alert(err.message) });
     }
 
     generateQrCode = () => {
@@ -59,6 +68,7 @@ class TransactionScreen extends React.Component {
         return (
             <View style={styles.container}>
                 <Text>Please enter transaction details: </Text>
+                <Text>From: {this.state.fromAddress} </Text>
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.setState({ toAddress: text })}
@@ -77,7 +87,7 @@ class TransactionScreen extends React.Component {
                     value={this.state.devices}
                     placeholder="Devices"
                 />
-                <Button 
+                <Button
                     title="Generate QR"
                     color="primary"
                     onPress={this.generateQrCode}

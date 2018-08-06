@@ -4,8 +4,8 @@ import QRCode from 'react-native-qrcode';
 
 class WalletConfig extends React.Component {
     state = {
-        walletName: '',
-        entropy: '',
+        walletName: 'DHS',
+        entropy: 'dsdsdsddsdsdsdd',
         numShares: '',
         threshold: '',
         qrCodeValue: '',
@@ -20,7 +20,6 @@ class WalletConfig extends React.Component {
 
     render() {
         return (
-
             <View>
                 <Text>Please enter the configuration of your wallet: </Text>
                 <TextInput
@@ -29,12 +28,12 @@ class WalletConfig extends React.Component {
                     value={this.state.walletName}
                     placeholder="Wallet Name"
                 />
-                <TextInput
+                {/* <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.setState({ entropy: text })}
                     value={this.state.entropy}
                     placeholder="Entropy"
-                />
+                /> */}
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => this.setState({ numShares: text })}
@@ -58,7 +57,6 @@ class WalletConfig extends React.Component {
                     size={200}
                     bgColor='purple'
                     fgColor='white' />
- 
             </View>
         );
     }

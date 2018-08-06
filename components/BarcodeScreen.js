@@ -10,12 +10,11 @@ export default class BarcodeScreen extends React.Component {
 
   async componentWillMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    this.setState({hasCameraPermission: status === 'granted'});
-    }
+    this.setState({ hasCameraPermission: status === 'granted' });
+  }
 
   render() {
     const { hasCameraPermission } = this.state;
-    
 
     if (hasCameraPermission === null) {
       return <Text>Requesting for camera permission</Text>;
@@ -33,14 +32,21 @@ export default class BarcodeScreen extends React.Component {
     }
   }
 
-   _handleBarCodeRead = ({ type, data }) => {
+  _handleBarCodeRead = ({ type, data }) => {
     const { navigate } = this.props.navigation;
     // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-     
-    //  alert();
-     FileSystem.writeAsStringAsync(FileSystem.documentDirectory+'/test', data).then(function(){
-       alert('Import Wallet Success');
-       navigate('Wallet');
-     });
+    let wallet = JSON.parse(data);
+    if (wallet["address"] !== undefined
+      && wallet['threshold'] !== undefined
+      && wallet['numShares'] !== undefined ) {
+      //  alert();
+      FileSystem.writeAsStringAsync(FileSystem.documentDirectory + '/wallet', data).then(function () {
+        alert('Import Wallet Success');
+        navigate('Wallet', {isImported : true});
+      });
+    }
+    else {
+      alert('Wallet information is not correct.')
+    }
   }
 }
